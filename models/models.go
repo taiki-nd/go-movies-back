@@ -24,4 +24,11 @@ type Genre struct {
 }
 
 type MovieGenre struct {
+	ID        int       `json:"id"`
+	MovieID   int       `json:"movie_id"`
+	GenreID   int       `json:"Genre_id"`
+	Genre     Genre     `json:"genre"`
+	GenreName string    `json:"genre_name "`
+	CreatedAt time.Time `json:"created_at"`
+	UpdatedAt time.Time `json:"updated_at"`
 }
