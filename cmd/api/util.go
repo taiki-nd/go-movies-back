@@ -10,6 +10,7 @@ func (app *application) writeJSON(w http.ResponseWriter, status int, data interf
 	wrapper := make(map[string]interface{})
 	wrapper[wrap] = data
 	js, err := json.Marshal(wrapper)
+	//js, err := json.MarshalIndent(wrapper, "", "\t")で見やすくなる
 	if err != nil {
 		return err
 	}
