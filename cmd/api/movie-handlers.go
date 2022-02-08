@@ -20,7 +20,7 @@ func (app *application) getOneMovie(w http.ResponseWriter, r *http.Request) {
 	app.logger.Println("id is", id)
 
 	movie := models.Movie{
-		ID:          10,
+		ID:          id,
 		Title:       "some movie",
 		Description: "text text text",
 		Year:        2022,
