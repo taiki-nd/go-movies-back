@@ -1,6 +1,8 @@
 package main
 
 import (
+	"context"
+	"database/sql"
 	"flag"
 	"fmt"
 	"log"
@@ -16,6 +18,9 @@ const version = "1.0.0"
 type config struct {
 	port int
 	env  string
+	db   struct {
+		dsn string
+	}
 }
 
 type AppStatus struct {
@@ -29,14 +34,38 @@ type application struct {
 	logger *log.Logger
 }
 
+func openDB(cfg config) (*sql.DB, error) {
+	db, err := sql.Open("postgres", cfg.db.dsn)
+	if err != nil {
+		return nil, err
+	}
+
+	ctx, cansel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cansel()
+
+	err = db.PingContext(ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	return db, nil
+}
+
 func main() {
 	var cfg config
 
 	flag.IntVar(&cfg.port, "port", 4000, "Server port to listen on")
 	flag.StringVar(&cfg.env, "env", "development", "Application environment (development|production")
+	flag.StringVar(&cfg.db.dsn, "dsn", "postgres://taiki.nd@localhost/go_movies?sslmode=disable", "Postgres connection string")
 	flag.Parse()
 
 	logger := log.New(os.Stdout, "", log.Ldate|log.Ltime)
+
+	db, err := openDB(cfg)
+	if err != nil {
+		logger.Fatal(err)
+	}
+	defer db.Close()
 
 	app := &application{
 		config: cfg,
@@ -53,7 +82,7 @@ func main() {
 
 	logger.Println("Starting server on port", cfg.port)
 
-	err := srv.ListenAndServe()
+	err = srv.ListenAndServe()
 	if err != nil {
 		log.Println(err)
 	}
