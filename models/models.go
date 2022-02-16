@@ -19,7 +19,7 @@ type Movie struct {
 	ReleaseDate time.Time      `json:"release_date"`
 	Runtime     int            `json:"runtime"`
 	Rating      int            `json:"rating"`
-	MPAARating  string         `json":mpaa_rating"`
+	MPAARating  string         `json:"mpaa_rating"`
 	CreatedAt   time.Time      `json:"-"`
 	UpdatedAt   time.Time      `json:"-"`
 	MovieGenre  map[int]string `json:"genres"`
