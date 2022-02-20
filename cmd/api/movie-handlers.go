@@ -22,6 +22,11 @@ type MoviePayload struct {
 	MPAARating  string `json:"mpaa_rating"`
 }
 
+type jsonRsep struct {
+	OK      bool   `json:"ok"`
+	Message string `json:"message"`
+}
+
 func (app *application) getOneMovie(w http.ResponseWriter, r *http.Request) {
 	params := httprouter.ParamsFromContext(r.Context())
 	id, err := strconv.Atoi(params.ByName("id"))
@@ -115,7 +120,6 @@ func (app *application) editMovie(w http.ResponseWriter, r *http.Request) {
 		app.errorJSON(w, err)
 		return
 	}
-	log.Println(payload.Title)
 
 	var movie models.Movie
 
@@ -130,11 +134,12 @@ func (app *application) editMovie(w http.ResponseWriter, r *http.Request) {
 	movie.CreatedAt = time.Now()
 	movie.UpdatedAt = time.Now()
 
-	log.Println(movie.ReleaseDate)
-
-	type jsonRsep struct {
-		OK bool `json:"ok"`
+	err = app.models.DB.InsertMovie(movie)
+	if err != nil {
+		app.errorJSON(w, err)
+		return
 	}
+
 	ok := jsonRsep{
 		OK: true,
 	}
