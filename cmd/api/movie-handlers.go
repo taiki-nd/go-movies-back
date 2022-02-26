@@ -140,6 +140,16 @@ func (app *application) editMovie(w http.ResponseWriter, r *http.Request) {
 			app.errorJSON(w, err)
 			return
 		}
+	} else {
+		id, _ := strconv.Atoi(payload.ID)
+		m, _ := app.models.DB.Get(id)
+		movie = *m
+		movie.UpdatedAt = time.Now()
+		err = app.models.DB.UpdateMovie(movie)
+		if err != nil {
+			app.errorJSON(w, err)
+			return
+		}
 	}
 
 	ok := jsonRsep{
