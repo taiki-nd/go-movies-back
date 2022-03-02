@@ -206,6 +206,7 @@ func (m *DBModel) InsertMovie(movie Movie) error {
 }
 
 func (m *DBModel) UpdateMovie(movie Movie) error {
+	fmt.Println("updating")
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
 	defer cancel()
 
@@ -222,7 +223,6 @@ func (m *DBModel) UpdateMovie(movie Movie) error {
 		movie.UpdatedAt,
 		movie.ID,
 	)
-
 	if err != nil {
 		log.Println(err)
 		return err

@@ -123,6 +123,12 @@ func (app *application) editMovie(w http.ResponseWriter, r *http.Request) {
 
 	var movie models.Movie
 
+	if payload.ID != "0" {
+		id, _ := strconv.Atoi(payload.ID)
+		m, _ := app.models.DB.Get(id)
+		movie = *m //追加ではなく編集の場合は予め編集できるようにしておく
+	}
+
 	movie.ID, _ = strconv.Atoi(payload.ID)
 	movie.Title = payload.Title
 	movie.Description = payload.Description
@@ -141,9 +147,9 @@ func (app *application) editMovie(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 	} else {
-		id, _ := strconv.Atoi(payload.ID)
-		m, _ := app.models.DB.Get(id)
-		movie = *m
+		//id, _ := strconv.Atoi(payload.ID)
+		//m, _ := app.models.DB.Get(id)
+		//movie = *m
 		movie.UpdatedAt = time.Now()
 		err = app.models.DB.UpdateMovie(movie)
 		if err != nil {
