@@ -11,7 +11,7 @@ import (
 	"github.com/pascaldekloe/jwt"
 )
 
-func (app *application) enableCROS(next http.Handler) http.Handler {
+func (app *application) enableCORS(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Access-Control-Allow-Origin", "*")
 		w.Header().Set("Access-Control-Allow-Headers", "Content-Type,Authorization")
@@ -22,7 +22,7 @@ func (app *application) enableCROS(next http.Handler) http.Handler {
 
 func (app *application) checkToken(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		w.Header().Add("vary", "Authorization")
+		w.Header().Add("Vary", "Authorization")
 		authHeader := r.Header.Get("Authorization")
 
 		if authHeader == "" {
@@ -36,10 +36,8 @@ func (app *application) checkToken(next http.Handler) http.Handler {
 		}
 
 		if headerParts[0] != "Bearer" {
-			if len(headerParts) != 2 {
-				app.errorJSON(w, errors.New("unauthorized - no header"))
-				return
-			}
+			app.errorJSON(w, errors.New("unauthorized - no bearer"))
+			return
 		}
 
 		token := headerParts[1]
@@ -70,7 +68,7 @@ func (app *application) checkToken(next http.Handler) http.Handler {
 			return
 		}
 
-		log.Panicln("Valid user: ", userID)
+		log.Panicln("Valid user:", userID)
 
 		next.ServeHTTP(w, r)
 	})
