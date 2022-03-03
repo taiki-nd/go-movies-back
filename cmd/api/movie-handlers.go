@@ -172,8 +172,8 @@ func (app *application) editMovie(w http.ResponseWriter, r *http.Request) {
 
 func (app *application) deleteMovie(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("deleting")
-	//params := httprouter.ParamsFromContext(r.Context())
-	params := r.Context().Value("params").(httprouter.Params)
+	params := httprouter.ParamsFromContext(r.Context())
+	//params := r.Context().Value("params").(httprouter.Params)
 	id, err := strconv.Atoi(params.ByName("id"))
 	fmt.Println(id)
 	if err != nil {

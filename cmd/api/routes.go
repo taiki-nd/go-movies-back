@@ -11,7 +11,7 @@ import (
 //user認証して編集等を可能にするため
 func (app *application) wrap(next http.Handler) httprouter.Handle {
 	return func(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
-		ctx := context.WithValue(r.Context(), "params", ps)
+		ctx := context.WithValue(r.Context(), httprouter.ParamsKey, ps)
 		next.ServeHTTP(w, r.WithContext(ctx))
 	}
 }
