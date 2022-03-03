@@ -234,7 +234,7 @@ func (m *DBModel) UpdateMovie(movie Movie) error {
 func (m *DBModel) DeleteMovie(id int) error {
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
 	defer cancel()
-
+	fmt.Println("deleting")
 	query := `delete from movies where id = $1`
 
 	_, err := m.DB.ExecContext(ctx, query, id)

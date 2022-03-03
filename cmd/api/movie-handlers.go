@@ -4,6 +4,7 @@ import (
 	"backend/models"
 	"encoding/json"
 	"errors"
+	"fmt"
 	"log"
 	"net/http"
 	"strconv"
@@ -170,8 +171,11 @@ func (app *application) editMovie(w http.ResponseWriter, r *http.Request) {
 }
 
 func (app *application) deleteMovie(w http.ResponseWriter, r *http.Request) {
-	params := httprouter.ParamsFromContext(r.Context())
+	fmt.Println("deleting")
+	//params := httprouter.ParamsFromContext(r.Context())
+	params := r.Context().Value("params").(httprouter.Params)
 	id, err := strconv.Atoi(params.ByName("id"))
+	fmt.Println(id)
 	if err != nil {
 		app.logger.Print(errors.New("invalid id parameter "))
 		app.errorJSON(w, err)
